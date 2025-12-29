@@ -1,14 +1,12 @@
+import os
 from telegram import Update
-from telegram.ext import (
-    ApplicationBuilder,
-    CommandHandler,
-    ContextTypes,
-)
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-BOT_TOKEN = "8501448057:AAHTQrSMhDd6DwDC6p9ZLwEVomINw1gphfI"
-ADMIN_ID = 5268298897  # your Telegram numeric ID
+# ── READ ENVIRONMENT VARIABLES FROM RENDER ──
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+ADMIN_ID = int(os.environ.get("ADMIN_ID"))  # your Telegram numeric ID
 
-
+# ── COMMAND HANDLERS ──
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
         "👋 *Welcome to Our Business Bot!*\n\n"
@@ -45,11 +43,20 @@ async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def order(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message is None:
+        return
+
     await update.message.reply_text(
         "📝 *Place an Order*\n\n"
         "Please type the service you want and any details.\n"
         "An admin will contact you shortly.",
         parse_mode="Markdown"
+    )
+
+    # Send order details to admin
+    await context.bot.send_message(
+        chat_id=ADMIN_ID,
+        text=f"📩 New order from @{update.effective_user.username}:\n\n{update.message.text}"
     )
 
 
@@ -63,6 +70,7 @@ async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 
+# ── MAIN FUNCTION ──
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()
 
@@ -76,6 +84,6 @@ def main():
     app.run_polling()
 
 
+# ── ENTRY POINT ──
 if __name__ == "__main__":
     main()
-
