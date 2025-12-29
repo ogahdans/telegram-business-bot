@@ -1,65 +1,65 @@
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+)
 
 BOT_TOKEN = "8501448057:AAHTQrSMhDd6DwDC6p9ZLwEVomINw1gphfI"
-ADMIN_ID = 5268298897  # replace with your Telegram numeric ID
-
-COMPANY_NAME = "DANIEL TECH SOLUTIONS"
-CONTACT_PHONE = "+234-903-288-5936"
-CONTACT_EMAIL = "ogahdans@gmail.com"
+ADMIN_ID = 5268298897  # your Telegram numeric ID
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        f"👋 Welcome to {COMPANY_NAME}\n\n"
-        "We provide smart digital solutions to help businesses grow.\n\n"
-        "Commands:\n"
-        "/price – View services\n"
-        "/order – Place an order\n"
-        "/help – Get help"
+        "👋 *Welcome to Our Business Bot!*\n\n"
+        "We offer professional digital services tailored to your needs.\n\n"
+        "📞 *Phone:* +2349032885936\n"
+        "📧 *Email:* ogahdans@gmail.com\n\n"
+        "Use the menu below to get started 👇",
+        parse_mode="Markdown"
     )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        f"{COMPANY_NAME} Help Center\n\n"
-        "1️⃣ Use /price to see services\n"
-        "2️⃣ Use /order to place an order\n\n"
-        f"📞 {CONTACT_PHONE}\n"
-        f"📧 {CONTACT_EMAIL}"
+        "ℹ️ *Help Menu*\n\n"
+        "/start – Welcome message\n"
+        "/price – View service prices\n"
+        "/order – Place an order\n"
+        "/contact – Contact details\n"
+        "/help – Help menu",
+        parse_mode="Markdown"
     )
 
 
 async def price(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "💼 Price List\n\n"
-        "🤖 Telegram Bot Setup – ₦50,000\n"
-        "📱 WhatsApp Bot Setup – ₦60,000\n"
-        "🌐 Website Design – ₦150,000\n\n"
-        "Use /order to continue"
+        "💼 *Our Services & Prices (₦)*\n\n"
+        "• Logo Design – ₦20,000\n"
+        "• Website Design – ₦150,000\n"
+        "• Telegram Bot Development – ₦100,000\n\n"
+        "📌 Custom projects are welcome.\n"
+        "Use /order to proceed.",
+        parse_mode="Markdown"
     )
 
 
 async def order(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user = update.message.from_user
-    username = user.username if user.username else "No username"
-
     await update.message.reply_text(
-        "✅ Order received!\n\n"
-        "Please send:\n"
-        "• Service Needed\n"
-        "• Budget\n"
-        "• Phone Number"
+        "📝 *Place an Order*\n\n"
+        "Please type the service you want and any details.\n"
+        "An admin will contact you shortly.",
+        parse_mode="Markdown"
     )
 
-    await context.bot.send_message(
-        chat_id=ADMIN_ID,
-        text=(
-            "📥 NEW ORDER\n\n"
-            f"👤 Name: {user.first_name}\n"
-            f"🔗 Username: {username}\n"
-            f"🆔 ID: {user.id}"
-        )
+
+async def contact(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        "📞 *Contact Us*\n\n"
+        "Phone: +234XXXXXXXXXX\n"
+        "Email: yourname@email.com\n\n"
+        "We respond fast 🚀",
+        parse_mode="Markdown"
     )
 
 
@@ -70,8 +70,9 @@ def main():
     app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("price", price))
     app.add_handler(CommandHandler("order", order))
+    app.add_handler(CommandHandler("contact", contact))
 
-    print("✅ Bot is running on Render...")
+    print("🤖 Bot is running...")
     app.run_polling()
 
 
